@@ -1,0 +1,6 @@
+SP01 | ao | L | 100000 | 20 
+SP02 | quan | S | 50000 | 30
+SP05 | ao somi | L | 120000   | 37      
+SP04 | ao khoac da | XL | 90000 | 128     
+SP07 | Quan dui | L | 53000     | 90   
+SP09 | Quan kaki | XL | 30000     | 50   
