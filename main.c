@@ -15,32 +15,48 @@ struct SanPham{
     struct SanPham *next;
 };
 
+// khoi tao va doc file
 void init(Hanghoa *l);
 void themcuoi(Hanghoa *l,Hanghoa sanpham);
 void docfile(Hanghoa *l, const char filename[]);
 int empty(Hanghoa l);
+
+// out
 void hienthidanhsachsanpham(Hanghoa l);
+
 void nhapsanpham(Hanghoa l);
 Hanghoa checksanpham(Hanghoa l, Hanghoa p);
 // Hanghoa travesanphamtrung(Hanghoa l, Hanghoa p);
+// them sp
 void themsanpham(Hanghoa *l);
+
+// search
 void SearchMasp(Hanghoa l,char masp[]);
 void SearchTensp(Hanghoa l,char tensp[]);
 int checkkhoanggia(elementtype min, elementtype max);
 void SearchGia(Hanghoa l, elementtype min, elementtype max);
+void search(Hanghoa l);
+
+// sx
 void sapxeptheoMasp(Hanghoa l);
 void sapxeptheoTensp(Hanghoa l);
 void sapxeptheoGiasp(Hanghoa l);
 void sapxeptheoSLsp(Hanghoa l);
-void xoasp(Hanghoa l);
-void updatesp(Hanghoa l);
-void save_file(Hanghoa l);
-
-void search(Hanghoa l);
 void sx(Hanghoa *l);
+
+// xoa
+void xoa1sp(Hanghoa *l);
+void xoansp(Hanghoa *l, int n);
 void xoa(Hanghoa *l);
+
+// update
+void updatesp(Hanghoa l);
 void updt(Hanghoa *l);
 
+// save
+void save_file(Hanghoa l);
+
+// menu
 void dispose(Hanghoa *l);
 void menu_timkiem();
 void menu_sx();
@@ -77,6 +93,15 @@ int main(){
             case 3:
                 search(list);
                 break;
+            case 4: 
+                sx(&list);
+                break;
+            case 5:
+                xoa(&list);
+                break;
+            case 6:
+                updt(&list);
+                break;
             case 7:
                 save_file(list);
                 printf("Luu du lieu thanh cong\n");
@@ -104,6 +129,7 @@ int main(){
 void init(Hanghoa *l){
     *l = NULL;
 }
+
 void themcuoi(Hanghoa *l, Hanghoa sanpham){
     if(*l == NULL){
         *l = sanpham;
@@ -227,6 +253,8 @@ void themsanpham(Hanghoa *l){
     themcuoi(l, p);
     printf("-> Them san pham moi thanh cong!\n");
 }
+
+// Tim kiem
 void SearchMasp(Hanghoa l,char masp[]){
     if(empty(l)){
         printf("Danh sach rong\n");
@@ -297,30 +325,6 @@ void SearchGia(Hanghoa l, elementtype min, elementtype max){
         printf("Danh sach khong co san pham nam trong khoang gia %ld -> %ld\n",min,max);
     }
 }
-void save_file(Hanghoa l){
-    FILE *file;
-    file = fopen("sp.txt","w+");
-    if(l == NULL){
-        fprintf(file,"Khong co du lieu\n");
-        return;
-    }
-    Hanghoa p = l;
-    while(p != NULL){
-        fprintf(file, "%s|%s|%s|%ld|%ld\n", 
-               p->masp, p->tensp, p->size, p->gia, p->soluong);
-        p = p->next;
-    }  
-    fclose(file);
-}
-void dispose(Hanghoa *l){
-    Hanghoa p;
-    while(*l != NULL){
-        p=*l;
-        *l = (*l)->next;
-        free(p);
-    }
-}
-// Tim kiem
 void search(Hanghoa l){\
     int k,test = 1;
     menu_timkiem();
@@ -405,6 +409,23 @@ void sx(Hanghoa *l){
 }
 
 // xoa
+void xoa1sp(Hanghoa *l){
+    char masp[5];
+    printf("Nhap ma san pham can xoa: ");
+    scanf(" %[^\n]",masp);
+    Hanghoa p = *l;
+    int count =1;
+    if (!strcmp(p->masp,masp)) {*l=p->next; count--;}
+    while(p!=NULL && count){
+        if(strcmp(masp,p->next->masp)==0){
+            p->next=p->next->next;
+            count--;
+        }
+        p=p->next;
+    }
+    if(count) printf("San pham can xoa khong ton tai\n");
+    else printf("Xoa san pham thanh cong\n");
+}
 void xoa(Hanghoa *l){
     int k,test = 1;
     menu_xoa();
@@ -415,6 +436,7 @@ void xoa(Hanghoa *l){
         clear_display();
         switch(k){
             case 1:
+                xoa1sp(l);
                 stop_display();
                 break;
             case 2:
@@ -442,6 +464,7 @@ void updt(Hanghoa *l){
         clear_display();
         switch(k){
             case 1:
+                xoa1sp(l);
                 stop_display();
                 break;
             case 2:
@@ -455,6 +478,32 @@ void updt(Hanghoa *l){
                 test=1;
                 break;
         }
+    }
+}
+
+// SAVE
+void save_file(Hanghoa l){
+    FILE *file;
+    file = fopen("sp.txt","w+");
+    if(l == NULL){
+        fprintf(file,"Khong co du lieu\n");
+        return;
+    }
+    Hanghoa p = l;
+    while(p != NULL){
+        fprintf(file, "%s|%s|%s|%ld|%ld\n", 
+               p->masp, p->tensp, p->size, p->gia, p->soluong);
+        p = p->next;
+    }  
+    fclose(file);
+}
+
+void dispose(Hanghoa *l){
+    Hanghoa p;
+    while(*l != NULL){
+        p=*l;
+        *l = (*l)->next;
+        free(p);
     }
 }
 
