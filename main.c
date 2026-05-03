@@ -22,16 +22,32 @@ int empty(Hanghoa l);
 void hienthidanhsachsanpham(Hanghoa l);
 void nhapsanpham(Hanghoa l);
 Hanghoa checksanpham(Hanghoa l, Hanghoa p);
-Hanghoa travesanphamtrung(Hanghoa l, Hanghoa p);
+// Hanghoa travesanphamtrung(Hanghoa l, Hanghoa p);
 void themsanpham(Hanghoa *l);
 void SearchMasp(Hanghoa l,char masp[]);
 void SearchTensp(Hanghoa l,char tensp[]);
 int checkkhoanggia(elementtype min, elementtype max);
 void SearchGia(Hanghoa l, elementtype min, elementtype max);
+void sapxeptheoMasp(Hanghoa l);
+void sapxeptheoTensp(Hanghoa l);
+void sapxeptheoGiasp(Hanghoa l);
+void sapxeptheoSLsp(Hanghoa l);
+void xoasp(Hanghoa l);
+void updatesp(Hanghoa l);
 void save_file(Hanghoa l);
+
+void search(Hanghoa l);
+void sx(Hanghoa *l);
+void xoa(Hanghoa *l);
+void updt(Hanghoa *l);
+
 void dispose(Hanghoa *l);
-void menu();
+void menu_timkiem();
+void menu_sx();
+void menu_update();
+void menu_xoa();
 void save_menu();
+void menu();
 void clear_display();
 void stop_display();
 
@@ -40,8 +56,6 @@ int main(){
     int test=1,k;
     init(&list);
     docfile(&list,"sp.txt");
-    // list = list->next;
-    // list = list->next;
     while(test==1){
         menu();
         printf("nhap lua chon: ");
@@ -60,40 +74,10 @@ int main(){
                 stop_display();
                 save =0;
                 break;
-            case 3: 
-                char masp[5];
-                printf("Nhap ma san pham can tim: ");
-                scanf(" %[^\n]",masp);
-                SearchMasp(list,masp);
-                stop_display();
+            case 3:
+                search(list);
                 break;
-            case 4:
-                char tensp[15];
-                printf("Nhap ten san pham can tim: ");
-                scanf(" %[^\n]",tensp);
-                SearchTensp(list,tensp);
-                stop_display();
-                break;
-            case 5:
-                elementtype min,max;
-                printf("Nhap khoang gia:\n");
-                printf("Gia thap nhat: ");
-                scanf("%ld",&min);
-                printf("Gia cao nhat: ");
-                scanf("%ld",&max);
-                while(checkkhoanggia(min,max)){
-                    clear_display();
-                    printf("Khoang gia loi! Xin vui long nhap lai.");
-                    printf("Nhap khoang gia:\n");
-                    printf("Gia thap nhat: ");
-                    scanf("%ld",&min);
-                    printf("Gia cao nhat: ");
-                    scanf("%ld",&max);
-                }
-                SearchGia(list,min,max);
-                stop_display();
-                break;
-            case 6:
+            case 7:
                 save_file(list);
                 printf("Luu du lieu thanh cong\n");
                 stop_display();
@@ -336,20 +320,183 @@ void dispose(Hanghoa *l){
         free(p);
     }
 }
-void menu(){
-    printf( "--------------MENU------------------\n");
-    printf( "1: In danh sach san pham\n");
-    printf( "2: Them san pham moi\n");
-    printf( "3: Tim kiem san pham theo ma san pham\n");
-    printf( "4: Tim kiem san pham theo ten san pham\n");
-    printf( "5: Tim kiem san pham theo gia san pham\n");
-    printf( "6: Luu du lieu vao file\n");
-    printf( "0: thoat chuong trinh\n");
+// Tim kiem
+void search(Hanghoa l){\
+    int k,test = 1;
+    menu_timkiem();
+    while(test){
+        test = 0;
+        printf("Nhap lua chon: ");
+        scanf("%d",&k);
+        clear_display();
+        switch(k){
+            case 1:
+                char masp[5];
+                printf("Nhap ma san pham can tim: ");
+                scanf(" %[^\n]",masp);
+                SearchMasp(l,masp);
+                stop_display();
+                break;
+            case 2:
+                char tensp[15];
+                printf("Nhap ten san pham can tim: ");
+                scanf(" %[^\n]",tensp);
+                SearchTensp(l,tensp);
+                stop_display();
+                break;
+            case 3:
+                elementtype min,max;
+                printf("Nhap khoang gia:\n");
+                printf("Gia thap nhat: ");
+                scanf("%ld",&min);
+                printf("Gia cao nhat: ");
+                scanf("%ld",&max);
+                while(checkkhoanggia(min,max)){
+                    clear_display();
+                    printf("Khoang gia loi! Xin vui long nhap lai.");
+                    printf("Nhap khoang gia:\n");
+                    printf("Gia thap nhat: ");
+                    scanf("%ld",&min);
+                    printf("Gia cao nhat: ");
+                    scanf("%ld",&max);
+                }
+                SearchGia(l,min,max);
+                stop_display();
+                break;
+            case 0:
+                break;
+            default:
+                printf("Nhap loi! Xin vui long nhap lai\n");
+                menu_timkiem();
+                test=1;
+                break;
+        }
+    }
+}
+
+// SX
+void sx(Hanghoa *l){
+    int k,test = 1;
+    menu_sx();
+    while(test){
+        test = 0;
+        printf("Nhap lua chon: ");
+        scanf("%d",&k);
+        clear_display();
+        switch(k){
+            case 1:
+                stop_display();
+                break;
+            case 2:
+                stop_display();
+                break;
+            case 3:
+                stop_display();
+                break;
+            case 0:
+                break;
+            default:
+                printf("Nhap loi! Xin vui long nhap lai\n");
+                menu_sx();
+                test=1;
+                break;
+        }
+    }
+}
+
+// xoa
+void xoa(Hanghoa *l){
+    int k,test = 1;
+    menu_xoa();
+    while(test){
+        test = 0;
+        printf("Nhap lua chon: ");
+        scanf("%d",&k);
+        clear_display();
+        switch(k){
+            case 1:
+                stop_display();
+                break;
+            case 2:
+                stop_display();
+                break;
+            case 0:
+                break;
+            default:
+                printf("Nhap loi! Xin vui long nhap lai\n");
+                menu_xoa();
+                test=1;
+                break;
+        }
+    }
+}
+
+// update
+void updt(Hanghoa *l){
+    int k,test = 1;
+    menu_update();
+    while(test){
+        test = 0;
+        printf("Nhap lua chon: ");
+        scanf("%d",&k);
+        clear_display();
+        switch(k){
+            case 1:
+                stop_display();
+                break;
+            case 2:
+                stop_display();
+                break;
+            case 0:
+                break;
+            default:
+                printf("Nhap loi! Xin vui long nhap lai\n");
+                menu_update();
+                test=1;
+                break;
+        }
+    }
+}
+
+// MENU
+void menu_timkiem(){
+    printf( "1: Tim kiem san pham theo ma san pham\n");
+    printf( "2: Tim kiem san pham theo ten san pham\n");
+    printf( "3: Tim kiem san pham theo gia san pham\n");
+    printf( "0: Tro lai menu chinh\n");
+}
+void menu_sx(){
+    printf( "1: Sap xep san pham theo ma san pham\n");
+    printf( "2: Sap xep san pham theo ten san pham\n");
+    printf( "3: Sap xep san pham theo gia san pham\n");
+    printf( "4: Sap xep san pham theo so luong san pham\n");
+    printf( "0: Tro lai menu chinh\n");
+}
+void menu_update(){
+    printf( "1: Cap nhat thong tin 1 san pham\n");
+    printf( "2: Cap nhat thong tin nhieu san pham\n");
+    printf( "0: Tro lai menu chinh\n");
+}
+void menu_xoa(){
+    printf( "1: Xoa 1 san pham\n");
+    printf( "2: Xoa nhieu san pham\n");
+    printf( "0: Tro lai menu chinh\n");
 }
 void save_menu(){
     printf("Du lieu chua duoc luu!\n");
     printf( "1: Luu du lieu vao file\n");
     printf( "2: Khong luu giu lieu\n");
+}
+void menu(){
+    printf( "--------------MENU------------------\n");
+    printf( "1: In danh sach san pham\n");
+    printf( "2: Them san pham moi\n");
+    printf( "3: Tim kiem san pham\n");
+    printf( "4: Sap xep san pham\n");
+    printf( "5: Cap nhat san pham\n");
+    printf( "6: Xoa san pham\n");
+    printf( "7: Luu du lieu vao file\n");
+    printf( "0: thoat chuong trinh\n");
 }
 void clear_display(){
     system("cls");
