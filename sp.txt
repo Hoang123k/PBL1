@@ -5,4 +5,4 @@ SP04|ao khoac da|XL|90000|128
 SP06|Quan kaki|XL|30000|50
 SP07|Ao khoac da bao|XXL|500000|145
 SP08|Quan au|L|150000|50
-SP09|Quan dui mau vang|XL|30000|50
+SP09|Quan dui|XL|20000|129
