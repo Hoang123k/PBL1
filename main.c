@@ -219,7 +219,7 @@ int checktensp(Hanghoa l, char tensp[]){
 
 void nhapsanpham(Hanghoa l, struct SanPham *p){
     printf("--- Thong tin san pham moi ---\n");
-    char masp[5];
+    char masp[10];
     printf("Ma san pham: ");
     scanf(" %[^\n]", masp);
     while(checkmasp(l,masp)){
@@ -379,7 +379,7 @@ void search(Hanghoa l){\
         clear_display();
         switch(k){
             case 1:
-                char masp[5];
+                char masp[10];
                 printf("Nhap ma san pham can tim: ");
                 scanf(" %[^\n]",masp);
                 SearchMasp(l,masp);
@@ -533,7 +533,7 @@ void upthongtin(struct SanPham *p){
 }
 void upma(Hanghoa l, struct SanPham *p){
     printf("Nhap ma san pham moi: ");
-    char masp[5];
+    char masp[10];
     scanf(" %[^\n]",masp);
     while(!strcmp(p->masp,masp)){
         printf("Ma san pham trung voi ma san pham hien tai!\n");
@@ -591,6 +591,8 @@ void updt(Hanghoa *l) {
     char masp[15];
     printf("Nhap ma cua san pham can cap nhat: ");
     scanf(" %[^\n]", masp);
+    menu_update();
+    printf("Nhap lua chon: ");
     int k;
     int found = 0;
     scanf("%d",&k);

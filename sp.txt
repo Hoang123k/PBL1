@@ -1,4 +1,4 @@
-SP01|Ao tay ngan|XL|35000|58
+SP01|ao tay dai|XL|30000|23
 SP02|quan|S|50000|30
 SP03|ao so mi|L|120000|37
 SP04|ao khoac da|XL|90000|128

@@ -89,31 +89,31 @@ void updt(Hanghoa *l);
 //Hoa don
 int tongHD = 0;
 int HD=0;
-    // tao hoa don
-int kiemTraTrungTrongHD(HoaDon *hd,char *maSP);
-void xuLyCongThem(HoaDon *hd, Hanghoa vt, int viTrisP);
-void xuLyThayMoi(HoaDon *hd, Hanghoa vt, int viTrisP);
-int kiemtrangay(HoaDon *hd,char ngay[]);
+    // hoa don ban hang
+int kiemtratrungHD(HoaDon *hd,char *maSP);
+void xuly_congthem(HoaDon *hd, Hanghoa vt, int viTrisP);
+void xuly_thaymoi(HoaDon *hd, Hanghoa vt, int viTrisP);
+int kiemtrangay(char ngay[]);
 void themVaoHD(HoaDon *hd, Hanghoa l);
 void taoHD(HoaDon *hd,Hanghoa l);
 void hienthisp_hd(HoaDon hd);
 void thanhtoan(HoaDon *hd);
-    //bestseller
+    //thong ke hoa don
 void thongke_theongay(HoaDon dsHD[]);
 void thongke_theothang(HoaDon dsHD[]);
 void thongke_theonam(HoaDon dsHD[]);
 void thongke_tatcathoigian(HoaDon dsHD[]);
 char* bestseller(HoaDon dsHD[],char *thoigian);
+void chinhsuaHD(HoaDon dsHD[], Hanghoa *l);
 void hienthihoadon(void);
 
-void hoadon(HoaDon dsHD[],Hanghoa *l);
 // save
 void save_file(Hanghoa l);
 
 // 3 ham thuc thi chinh
 void khohang(Hanghoa *l);
 void banhang(HoaDon *hd, Hanghoa *l);
-void hethong(HoaDon *hd,Hanghoa *l);
+void hethong(HoaDon dsHD[],Hanghoa *l);
 
 // menu
 void menu_timkiem();
@@ -121,6 +121,7 @@ void menu_sx();
 void menu_update();
 void menu_xoa();
 void menu_bestseller();
+void menu_chinhsuaHD();
 void save_menu();
 void menu_khohang();
 void menu_banhang();
@@ -237,6 +238,8 @@ void docfile_hoadon(HoaDon dsHD[], int *sl_hd, const char filename[]) {
         char *dulieu = strtok(line, "|");
         if (dulieu != NULL) strcpy(dsHD[i].maHD, dulieu);
         dulieu = strtok(NULL, "|");
+        if (dulieu != NULL) strcpy(dsHD[i].ngay, dulieu);
+        dulieu = strtok(NULL, "|");
         if (dulieu != NULL) dsHD[i].soMatHang = atoi(dulieu);
         dulieu = strtok(NULL, "|");
         if (dulieu != NULL) dsHD[i].tongTien = atol(dulieu);
@@ -287,7 +290,7 @@ void canhbaosp(Hanghoa l){
     Hanghoa p=l;
     while (p!=NULL){
         if(p->soluong<=10) {printf("San pham %s sap het hang!\n",p->masp); canhbao=1;}
-        if(p->soluong==0){ printf("SAN PHAM DA HET! XIN VUI LONG NHAP THEM!\n"); canhbao=1;}
+        else if(p->soluong==0){ printf("SAN PHAM %s DA HET! XIN VUI LONG NHAP THEM!\n",p->masp); canhbao=1;}
         p=p->next;
     }
     if(canhbao==0) {printf("Khong co san pham nao sap het hang\n");}
@@ -807,10 +810,18 @@ void xoa(Hanghoa *l){
 }
 
 //HOA DON
-int kiemtrangay(HoaDon *hd,char ngay[]){
+int kiemtrangay(char ngay[]){
     int day, month, year;
-    if(sscanf(ngay, "%d/%d/%d", &day, &month, &year)!=3) return 0;
-    if(month>12 || day <1 || month<1 || year<1) return 0;
+   if (strlen(ngay) != 10) {
+        return 0; 
+    }
+    if (ngay[2] != '/' || ngay[5] != '/') {
+        return 0;
+    }
+    if (sscanf(ngay, "%d/%d/%d", &day, &month, &year) != 3) {
+        return 0;
+    }
+    if (month > 12 || month < 1 || day < 1 || year < 2000 || year > 2100)  return 0;
     switch(month){
         case 4:
         case 6:
@@ -832,7 +843,7 @@ int kiemtrangay(HoaDon *hd,char ngay[]){
     };
     return 1;
 }
-int kiemTraTrungTrongHD(HoaDon *hd, char *maSP) {
+int kiemtratrungHD(HoaDon *hd, char *maSP) {
     for (int i = 0; i < hd->soMatHang; i++) {
         if (strcmp(hd->ds[i].maSP, maSP) == 0) {
             return i;
@@ -840,7 +851,7 @@ int kiemTraTrungTrongHD(HoaDon *hd, char *maSP) {
     }
     return -1; 
 }
-void xuLyCongThem(HoaDon *hd, Hanghoa vt, int viTrisP) {
+void xuly_congthem(HoaDon *hd, Hanghoa vt, int viTrisP) {
     elementtype sl_them;
 
     if (vt->soluong <= 0) {
@@ -861,13 +872,13 @@ void xuLyCongThem(HoaDon *hd, Hanghoa vt, int viTrisP) {
 
     printf("Da cong don san pham vao hoa don thanh cong!\n");
 }
-void xuLyThayMoi(HoaDon *hd, Hanghoa vt, int viTrisP) {
+void xuly_thaymoi(HoaDon *hd, Hanghoa vt, int viTrisP) {
     elementtype sl_moi;
     elementtype sl_cu = hd->ds[viTrisP].soLuong;
-    long kho_kha_dung = vt->soluong + sl_cu;
-    printf("So luong toi da co the thay moi (Kho + San pham cu): %ld\n", kho_kha_dung);
+    long controng = vt->soluong + sl_cu;
+    printf("So luong toi da co the thay moi (Kho + San pham cu): %ld\n", controng);
     printf("Nhap so luong THAY MOI hoan toan: ");
-    while (!scanf("%ld", &sl_moi) || sl_moi <= 0 || sl_moi > kho_kha_dung) {
+    while (!scanf("%ld", &sl_moi) || sl_moi <= 0 || sl_moi > controng) {
         while (getchar() != '\n');
         printf("So luong khong hop le!\n");
         printf("Nhap lai so luong thay moi: ");
@@ -892,7 +903,7 @@ void themVaoHD(HoaDon *hd, Hanghoa l) {
         return;
     }
 
-    int vi_tri_trung = kiemTraTrungTrongHD(hd, vt->masp);
+    int vi_tri_trung = kiemtratrungHD(hd, vt->masp);
 
     if (vi_tri_trung != -1) {
         int lua_chon = 0;
@@ -906,9 +917,9 @@ void themVaoHD(HoaDon *hd, Hanghoa l) {
             printf("Lua chon khong hop le! Nhap lai (1/2): ");
         }
         if (lua_chon == 1) {
-            xuLyCongThem(hd, vt, vi_tri_trung);
+            xuly_congthem(hd, vt, vi_tri_trung);
         } else {
-            xuLyThayMoi(hd, vt, vi_tri_trung);
+            xuly_thaymoi(hd, vt, vi_tri_trung);
         }
     } 
     else {
@@ -951,7 +962,7 @@ void taoHD(HoaDon *hd, Hanghoa l) {
     while (1) {
         printf("Nhap ngay cho hoa don (dd/mm/yyyy): ");
         scanf(" %[^\n]", hd->ngay);
-        if (kiemtrangay(hd,hd->ngay)) {
+        if (kiemtrangay(hd->ngay)) {
             break;
         }
         printf("Ngay cua hoa don khong hop le! Vui long kiem tra lai.\n");
@@ -975,6 +986,7 @@ void taoHD(HoaDon *hd, Hanghoa l) {
 void hienthisp_hd(HoaDon hd){
     if(!hd.soMatHang) {printf("Hoa don rong!\n"); return;}
     printf("Ma hoa Don :%s\n",hd.maHD);
+    printf("Ngay: %s\n",hd.ngay);
     printf("%-10s | %-20s | %-10s | %-15s | %-10s | %-15s\n", 
            "Ma SP", "Ten San Pham", "Size", "Gia/SP(VND)", "So luong", "Thanh tien(VND)");
     printf("---------------------------------------------------------------------------------------------------------\n");
@@ -1015,12 +1027,15 @@ void thanhtoan(HoaDon *hd) {
     }
 
     printf("Tong tien: %ld VND\n", hd->tongTien);
-    dsHD[tongHD++] = *hd; 
+    dsHD[tongHD] = *hd; 
+    tongHD++;
     HD = 0; 
     hd->soMatHang = 0; 
     hd->tongTien = 0;
     memset(hd->maHD, 0, sizeof(hd->maHD));
     save = 0;
+    printf("Thanh toan hoa don thanh cong\n");
+
 }
 void thongke_theongay(HoaDon dsHD[]){
     char ngay_nhap[30];
@@ -1030,13 +1045,13 @@ void thongke_theongay(HoaDon dsHD[]){
     while (1) {
         printf("Nhap ngay muon thong ke (dd/mm/yyyy): ");
         scanf(" %[^\n]", ngay_nhap);
-        if (kiemtrangay(&hd_temp, ngay_nhap)) {
+        if (kiemtrangay(ngay_nhap)) {
             strcpy(tham_so_loc, ngay_nhap);
             break;
         }
         printf("Ngay nhap khong dung thuc te hoac sai dinh dang! Vui long nhap lai.\n");
     }
-    printf("\n=> San pham ban chay nhat ngay %s la: [ %s ]\n", tham_so_loc, bestseller(dsHD, tham_so_loc));
+    printf("\n=> San pham ban chay nhat ngay %s la: %s \n", tham_so_loc, bestseller(dsHD, tham_so_loc));
     
 }
 void thongke_theothang(HoaDon dsHD[]) {
@@ -1054,7 +1069,7 @@ void thongke_theothang(HoaDon dsHD[]) {
         printf("Nam khong hop le! Nhap lai: ");
     }
     sprintf(tham_so_loc, "%02d/%04d", mm, yyyy);
-    printf("\n=> San pham ban chay nhat trong thang %s la: [ %s ]\n", tham_so_loc, bestseller(dsHD, tham_so_loc));
+    printf("\n=> San pham ban chay nhat trong thang %s la: %s\n", tham_so_loc, bestseller(dsHD, tham_so_loc));
 }
 void thongke_theonam(HoaDon dsHD[]) {
     int yyyy;
@@ -1066,10 +1081,10 @@ void thongke_theonam(HoaDon dsHD[]) {
         printf("Nam khong hop le! Nhap lai: ");
     }
     sprintf(tham_so_loc, "%04d", yyyy);
-    printf("\n=> San pham ban chay nhat trong nam %s la: [ %s ]\n", tham_so_loc, bestseller(dsHD, tham_so_loc));
+    printf("\n=> San pham ban chay nhat trong nam %s la: %s\n", tham_so_loc, bestseller(dsHD, tham_so_loc));
 }
 void thongke_tatcathoigian(HoaDon dsHD[]) {
-    printf("\n=> San pham ban chay nhat tu truoc den nay la: [ %s ]\n", bestseller(dsHD, ""));
+    printf("\n=> San pham ban chay nhat tu truoc den nay la: %s\n", bestseller(dsHD, ""));
 }
 char *bestseller(HoaDon dsHD[], char *thoiGian) {
     if (tongHD == 0) {
@@ -1172,6 +1187,126 @@ void thongke_bestseller(HoaDon dsHD[]) {
         }
     }
 }
+void chinhsuaHD(HoaDon dsHD[], Hanghoa *l) {
+    if (tongHD == 0) {
+        printf("Chua co hoa don nao trong he thong de chinh sua!\n");
+        return;
+    }
+
+    char ma[20];
+    printf("Nhap ma hoa don can chinh sua (Vi du: HD001): ");
+    scanf(" %[^\n]", ma);
+    int vi_tri_hd = -1;
+    for (int i = 0; i < tongHD; i++) {
+        if (strcmp(dsHD[i].maHD, ma) == 0) {
+            vi_tri_hd = i;
+            break;
+        }
+    }
+
+    if (vi_tri_hd == -1) {
+        printf("Khong tim thay hoa don %s trong he thong!\n", ma);
+        return;
+    }
+    clear_display();
+    printf("--- DANG CHINH SUA HOA DON: %s ---\n", dsHD[vi_tri_hd].maHD);
+    hienthisp_hd(dsHD[vi_tri_hd]);
+    for (int i = 0; i < dsHD[vi_tri_hd].soMatHang; i++) {
+        Hanghoa vt = travesanpham(*l, dsHD[vi_tri_hd].ds[i].maSP);
+        if (vt != NULL) {
+            vt->soluong += dsHD[vi_tri_hd].ds[i].soLuong;
+        }
+    }
+
+    int lua_chon = -1;
+    do {
+        printf("\n[Hien tai dang sua hoa don %s]\n",dsHD[vi_tri_hd].maHD);
+        menu_chinhsuaHD();
+        printf("Nhap lua chon cua ban: ");
+        if (scanf("%d", &lua_chon) != 1) {
+            while (getchar() != '\n');
+            lua_chon = -1;
+            continue;
+        }
+        clear_display();
+
+        switch (lua_chon) {
+            case 1: {
+                char ngay_moi[15];
+                while (1) {
+                    printf("Nhap ngay moi cho hoa don (dd/mm/yyyy): ");
+                    scanf(" %[^\n]", ngay_moi);
+                    if (kiemtrangay(ngay_moi)) {
+                        strcpy(dsHD[vi_tri_hd].ngay, ngay_moi);
+                        printf("Cap nhat ngay hoa don thanh cong!\n");
+                        break;
+                    }
+                    printf("Ngay khong hop le chuẩn 10 ky tu! Nhap lai.\n");
+                }
+                break;
+            }
+            case 2:
+                themVaoHD(&dsHD[vi_tri_hd], *l); 
+                break;
+
+            case 3: {
+                if (dsHD[vi_tri_hd].soMatHang == 0) {
+                    printf("Hoa don nay hien tai khong co san pham nao de sua!\n");
+                    break;
+                }
+                char ma_sp[20];
+                printf("Nhap ma san pham can dieu chinh trong hoa don: ");
+                scanf(" %[^\n]", ma_sp);
+
+                int idx_sp = kiemtratrungHD(&dsHD[vi_tri_hd], ma_sp);
+                if (idx_sp == -1) {
+                    printf("San pham ma %s khong ton tai trong hoa don nay!\n", ma_sp);
+                    break;
+                }
+
+                Hanghoa vt = travesanpham(*l, ma_sp);
+                if (vt == NULL) {
+                    printf("San pham nay khong con ton tai trong danh muc kho hang goc!\n");
+                    break;
+                }
+
+                int opt = 0;
+                printf("San pham: %s | So luong cu trong HD: %ld | Kho hien tai: %ld\n", 
+                       dsHD[vi_tri_hd].ds[idx_sp].tenSP, dsHD[vi_tri_hd].ds[idx_sp].soLuong, vt->soluong);
+                printf("Ban muon: 1. Cong them | 2. Thay moi so luong: ");
+                while (!scanf("%d", &opt) || opt < 1 || opt > 2) {
+                    while (getchar() != '\n');
+                    printf("Nhap lai (1/2): ");
+                }
+
+                if (opt == 1) {
+                    xuly_congthem(&dsHD[vi_tri_hd], vt, idx_sp);
+                } else {
+                    xuly_thaymoi(&dsHD[vi_tri_hd], vt, idx_sp);
+                }
+                break;
+            }
+            case 0:
+                printf("Dang luu lai toan bo thay doi va chot hoa don...\n");
+                break;
+            default:
+                printf("Lua chon khong hop le!\n");
+                break;
+        }
+    } while (lua_chon != 0);
+    dsHD[vi_tri_hd].tongTien = 0;
+    for (int i = 0; i < dsHD[vi_tri_hd].soMatHang; i++) {
+        dsHD[vi_tri_hd].ds[i].thanhTien = dsHD[vi_tri_hd].ds[i].soLuong * dsHD[vi_tri_hd].ds[i].gia;
+        dsHD[vi_tri_hd].tongTien += dsHD[vi_tri_hd].ds[i].thanhTien;
+        Hanghoa vt = travesanpham(*l, dsHD[vi_tri_hd].ds[i].maSP);
+        if (vt != NULL) {
+            vt->soluong -= dsHD[vi_tri_hd].ds[i].soLuong;
+        }
+    }
+    save = 0;
+    printf("\n=> CHINH SUA HOA DON %s THANH CONG!\n", dsHD[vi_tri_hd].maHD);
+    hienthisp_hd(dsHD[vi_tri_hd]);
+}
 void hienthihoadon(void) {
     if (tongHD == 0) {
         printf("Chua co hoa don nao trong danh sach thong ke!\n");
@@ -1246,6 +1381,7 @@ void khohang(Hanghoa *l) {
         switch (lua_chon) {
             case 1: 
                 hienthidanhsachsanpham(*l); 
+                stop_display();
                 break;
             case 2: 
                 themsanpham(l); 
@@ -1331,6 +1467,9 @@ void hethong(HoaDon dsHD[], Hanghoa *l) {
                 hienthihoadon();
                 break;
             case 3:
+                chinhsuaHD(dsHD,l);
+                break;
+            case 4:
                 save_file(*l);
                 printf("Ghi du lieu vao file sp.txt va hd.txt thanh cong!\n");
                 break;
@@ -1378,11 +1517,19 @@ void menu_xoa(){
 }
 void menu_bestseller(){
     printf("---------------- THỐNG KÊ BEST SELLER ----------------\n");
-    printf("1: Thống kê theo NGÀY cụ thể (dd/mm/yyyy)\n");
-    printf("2: Thống kê theo THÁNG (mm/yyyy)\n");
-    printf("3: Thống kê theo NĂM (yyyy)\n");
-    printf("4: Thống kê TẤT CẢ THỜI GIAN\n");
-    printf("0: Quay lại menu chính\n");
+    printf("1: Thong ke theo ngay (dd/mm/yyyy)\n");
+    printf("2: Thong ke theo thang (mm/yyyy)\n");
+    printf("3: Thong ke theo nam (yyyy)\n");
+    printf("4: Thong ke theo tat ca thoi gian\n");
+    printf("0: Quay lai menu chinh\n");
+}
+void menu_chinhsuaHD() {
+    printf("\n------ CHINH SUA HOA DON DA THANH TOAN ------\n");
+    printf("1. Chinh sua ngay hoa don\n");
+    printf("2. them san pham moi vao hoa don nay\n");
+    printf("3. Dieu chinh san pham da co (Cong don/Thay moi)\n");
+    printf("0. Hoan tat va Luu thay doi\n");
+    printf("---------------------------------------------\n");
 }
 void save_menu(){
     printf("DU LIEU CHUA DUOC LUU!\n");
@@ -1391,51 +1538,37 @@ void save_menu(){
 }
 void menu_khohang(){
     printf("\n------------ QUAN LY KHO HANG ------------\n");
-    printf("1. In danh sach san pham\n");
-    printf("2. Them san pham moi\n");
-    printf("3. Tim kiem san pham\n");
-    printf("4. Sap xep san pham\n");
-    printf("5. Cap nhat san pham\n");
-    printf("6. Xoa san pham\n");
-    printf("7. Cac san pham sap het trong kho\n");
-    printf("0. Quay lai Menu chinh\n");
+    printf("1: In danh sach san pham\n");
+    printf("2: Them san pham moi\n");
+    printf("3: Tim kiem san pham\n");
+    printf("4: Sap xep san pham\n");
+    printf("5: Cap nhat san pham\n");
+    printf("6: Xoa san pham\n");
+    printf("7: Cac san pham sap het trong kho\n");
+    printf("0: Quay lai Menu chinh\n");
 }
 void menu_banhang(){
     printf("\n------- QUAN LY HOA DON & BAN HANG -------\n");
-    printf("1. Tao hoa don moi\n");
-    printf("2. Them san pham vao hoa don\n");
-    printf("3. Hien thi san pham trong hoa don hien tai\n");
-    printf("4. Thanh toan hoa don\n");
-    printf("0. Quay lai Menu chinh\n");
+    printf("1: Tao hoa don moi\n");
+    printf("2: Them san pham vao hoa don\n");
+    printf("3: Hien thi san pham trong hoa don hien tai\n");
+    printf("4: Thanh toan hoa don\n");
+    printf("0: Quay lai Menu chinh\n");
 }
 void menu_hethong(){
     printf("\n----------- THONG KE & HE THONG -----------\n");
-    printf("1. Xem san pham Best Seller\n");
-    printf("2. Hien thi danh sach cac hoa don da xuat\n");
-    printf("3. Luu du lieu vao File\n");
-    printf("0. Quay lai Menu chinh\n");
+    printf("1: Xem san pham Best Seller\n");
+    printf("2: Hien thi danh sach cac hoa don da xuat\n");
+    printf("3: Chinh sua hoa don\n");
+    printf("4: Luu du lieu vao File\n");
+    printf("0: Quay lai Menu chinh\n");
 }
 void menu(){
     printf( "--------------MENU------------------\n");
-    printf("1. Quan ly KHO HANG (San pham)\n");
-    printf("2. Quan ly HOA DON & BAN HANG\n");
-    printf("3. THONG KE & HE THONG\n");
-    printf("0. Thoat chuong trinh\n");
-    // printf( "1: In danh sach san pham\n");
-    // printf( "2: Them san pham moi\n");
-    // printf( "3: Tim kiem san pham\n");
-    // printf( "4: Sap xep san pham\n");
-    // printf( "5: Cap nhat san pham\n");
-    // printf( "6: Xoa san pham\n");
-    // printf( "7: Cac san pham sap het\n");
-    // printf( "8: Tao hoa don moi\n");
-    // printf( "9: Them san pham vao hoa don\n");
-    // printf( "10: hien thi danh sach san pham da them\n");
-    // printf( "11: Thanh toan hoa don\n");
-    // printf( "12: San pham best seller\n");
-    // printf( "13: Hien thi danh sach hoa don\n");
-    // printf( "14: Luu du lieu vao file\n");
-    // printf( "0: thoat chuong trinh\n");
+    printf("1: Quan ly KHO HANG (San pham)\n");
+    printf("2: Quan ly HOA DON & BAN HANG\n");
+    printf("3: THONG KE & HE THONG\n");
+    printf("0: Thoat chuong trinh\n");
 }
 void clear_display(){
     system("cls");
