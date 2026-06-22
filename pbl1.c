@@ -276,12 +276,12 @@ void hienthidanhsachsanpham(Hanghoa l){
         return;
     }
     printf("%-10s | %-20s | %-10s | %-15s | %-10s\n", 
-        "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
+           "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
     printf("-----------------------------------------------------------------------------\n");
     Hanghoa p = l;
     while(p != NULL){
         printf("%-10s | %-20s | %-10s | %-15ld | %-10ld\n", 
-            p->masp, p->tensp, p->size, p->gia, p->soluong);
+               p->masp, p->tensp, p->size, p->gia, p->soluong);
         p = p->next;
     }
 }
@@ -414,12 +414,12 @@ void SearchMasp(Hanghoa l,char masp[]){
     int checksearch=0;
     Hanghoa p=l;
     printf("%-10s | %-20s | %-10s | %-15s | %-10s\n", 
-        "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
+           "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
     printf("-----------------------------------------------------------------------------\n");
     while(p != NULL){
         if(strstr(p->masp,masp) != NULL){
             printf("%-10s | %-20s | %-10s | %-15ld | %-10ld\n", 
-            p->masp, p->tensp, p->size, p->gia, p->soluong);
+               p->masp, p->tensp, p->size, p->gia, p->soluong);
             checksearch++;
         }
         p=p->next;
@@ -436,12 +436,12 @@ void SearchTensp(Hanghoa l, char tensp[]){
     int checksearch=0;
     Hanghoa p=l;
     printf("%-10s | %-20s | %-10s | %-15s | %-10s\n", 
-        "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
+           "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
     printf("-----------------------------------------------------------------------------\n");
     while(p != NULL){
         if(strstr(p->tensp,tensp) != NULL){
             printf("%-10s | %-20s | %-10s | %-15ld | %-10ld\n", 
-            p->masp, p->tensp, p->size, p->gia, p->soluong);
+               p->masp, p->tensp, p->size, p->gia, p->soluong);
             checksearch++;
         }
         p = p->next;
@@ -462,12 +462,12 @@ void SearchGia(Hanghoa l, elementtype min, elementtype max){
     int checksearch=0;
     Hanghoa p=l;
     printf("%-10s | %-20s | %-10s | %-15s | %-10s\n", 
-        "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
+           "Ma SP", "Ten San Pham", "Size", "Gia (VND)", "So luong");
     printf("-----------------------------------------------------------------------------\n");
     while(p != NULL){
         if(p->gia>=min && p->gia<=max){
             printf("%-10s | %-20s | %-10s | %-15ld | %-10ld\n", 
-            p->masp, p->tensp, p->size, p->gia, p->soluong);
+               p->masp, p->tensp, p->size, p->gia, p->soluong);
             checksearch++;
         }
         p = p->next;
@@ -812,7 +812,7 @@ void xoa(Hanghoa *l){
 //HOA DON
 int kiemtrangay(char ngay[]){
     int day, month, year;
-if (strlen(ngay) != 10) {
+   if (strlen(ngay) != 10) {
         return 0; 
     }
     if (ngay[2] != '/' || ngay[5] != '/') {
@@ -855,11 +855,11 @@ void xuly_congthem(HoaDon *hd, Hanghoa vt, int viTrisP) {
     elementtype sl_them;
 
     if (vt->soluong <= 0) {
-        printf("San pham da het hang, khong the cong them!\n");
+        printf("Sản phẩm đã hết hàng trong kho, không thể cộng thêm!\n");
         return;
     }
-    printf("So luong con lai: %ld\n", vt->soluong);
-    printf("Nhap so luong muon cong them: ");
+    printf("Số lượng có thể mua thêm trong kho: %ld\n", vt->soluong);
+    printf("Nhap so luong muon CONG THEM: ");
     while (!scanf("%ld", &sl_them) || sl_them <= 0 || sl_them > vt->soluong) {
         while (getchar() != '\n');
         printf("So luong khong hop le!\n");
@@ -892,7 +892,6 @@ void xuly_thaymoi(HoaDon *hd, Hanghoa vt, int viTrisP) {
     printf("Da thay moi so luong san pham trong hoa don!\n");
 }
 void themVaoHD(HoaDon *hd, Hanghoa l) {
-    if(!hd->soMatHang) {printf("Hoa don rong!\n"); return;}
     char ma[20];
     elementtype sl;
 
@@ -989,16 +988,16 @@ void hienthisp_hd(HoaDon hd){
     printf("Ma hoa Don :%s\n",hd.maHD);
     printf("Ngay: %s\n",hd.ngay);
     printf("%-10s | %-20s | %-10s | %-15s | %-10s | %-15s\n", 
-        "Ma SP", "Ten San Pham", "Size", "Gia/SP(VND)", "So luong", "Thanh tien(VND)");
+           "Ma SP", "Ten San Pham", "Size", "Gia/SP(VND)", "So luong", "Thanh tien(VND)");
     printf("---------------------------------------------------------------------------------------------------------\n");
     for(int i = 0; i < hd.soMatHang; i++) {
         printf("%-10s | %-20s | %-10s | %-15d | %-10d | %-15d\n",
-            hd.ds[i].maSP,
-            hd.ds[i].tenSP,
-            hd.ds[i].size,
-            hd.ds[i].gia,
-            hd.ds[i].soLuong,
-            hd.ds[i].thanhTien);
+               hd.ds[i].maSP,
+               hd.ds[i].tenSP,
+               hd.ds[i].size,
+               hd.ds[i].gia,
+               hd.ds[i].soLuong,
+               hd.ds[i].thanhTien);
     }
     printf("Tong tien: %ld\n",hd.tongTien);
 }
@@ -1015,16 +1014,16 @@ void thanhtoan(HoaDon *hd) {
 
     printf("\nHoa don %s\n", hd->maHD);
     printf("%-10s | %-20s | %-10s | %-15s | %-10s | %-15s\n", 
-        "Ma SP", "Ten San Pham", "Size", "Gia/SP(VND)", "So luong", "Thanh tien");
+           "Ma SP", "Ten San Pham", "Size", "Gia/SP(VND)", "So luong", "Thanh tien");
     printf("---------------------------------------------------------------------------------------------------------\n");
     for(int i = 0; i < hd->soMatHang; i++) {
         printf("%-10s | %-20s | %-10s | %-15d | %-10d | %-15d\n",
-            hd->ds[i].maSP,
-            hd->ds[i].tenSP,
-            hd->ds[i].size,
-            hd->ds[i].gia,
-            hd->ds[i].soLuong,
-            hd->ds[i].thanhTien);
+               hd->ds[i].maSP,
+               hd->ds[i].tenSP,
+               hd->ds[i].size,
+               hd->ds[i].gia,
+               hd->ds[i].soLuong,
+               hd->ds[i].thanhTien);
     }
 
     printf("Tong tien: %ld VND\n", hd->tongTien);
@@ -1273,7 +1272,7 @@ void chinhsuaHD(HoaDon dsHD[], Hanghoa *l) {
 
                 int opt = 0;
                 printf("San pham: %s | So luong cu trong HD: %ld | Kho hien tai: %ld\n", 
-                    dsHD[vi_tri_hd].ds[idx_sp].tenSP, dsHD[vi_tri_hd].ds[idx_sp].soLuong, vt->soluong);
+                       dsHD[vi_tri_hd].ds[idx_sp].tenSP, dsHD[vi_tri_hd].ds[idx_sp].soLuong, vt->soluong);
                 printf("Ban muon: 1. Cong them | 2. Thay moi so luong: ");
                 while (!scanf("%d", &opt) || opt < 1 || opt > 2) {
                     while (getchar() != '\n');
@@ -1330,7 +1329,7 @@ void save_file(Hanghoa l){
     Hanghoa p = l;
     while(p != NULL){
         fprintf(file, "%s|%s|%s|%ld|%ld\n", 
-            p->masp, p->tensp, p->size, p->gia, p->soluong);
+               p->masp, p->tensp, p->size, p->gia, p->soluong);
         p = p->next;
     } 
     fclose(file);
@@ -1341,7 +1340,7 @@ void save_file(Hanghoa l){
     }
     
     for(int i = 0; i < tongHD; i++){
-        fprintf(file, "%s|%s|%ld|%ld\n", dsHD[i].maHD,dsHD[i].ngay, dsHD[i].soMatHang, dsHD[i].tongTien);
+        fprintf(file, "%s|%ld|%ld\n", dsHD[i].maHD, dsHD[i].soMatHang, dsHD[i].tongTien);
         for(int j = 0; j < dsHD[i].soMatHang; j++){
             fprintf(file, "%s|%s|%s|%ld|%ld|%ld|%ld\n",
                 dsHD[i].ds[j].maSP,
